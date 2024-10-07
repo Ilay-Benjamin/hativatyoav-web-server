@@ -1,68 +1,49 @@
 <?php
 
-
+// Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
+// Path to the config file for the Backend app
 define("CONFIG_FILE", $_SERVER['DOCUMENT_ROOT'] . "/../private/landing/appdata/api/config/config.json");
 
-
-echo "<br><br><br>DOCUMENT_ROOT: <br>" . $_SERVER['DOCUMENT_ROOT'] . "<br><br><br>";
-echo "<br><br><br>__DIR__: <br>" . __DIR__ . "<br><br><br>";
-
-
-
+// Load the configuration file for the Backend app
 function loadConfig() {
     if (!file_exists(CONFIG_FILE)) {
         throw new Exception("Configuration file not found");
     }
     $configContent = file_get_contents(CONFIG_FILE);
-    return json_decode($configContent);
+    return json_decode($configContent, true); // Decoding as associative array
 }
 
-
+// Get Firebase Configurations from config
 function getFirebaseConfigs() {
-     $config = loadConfig();
-     $firebaseConfigs = $config->firebaseConfigs;
-     return $firebaseConfigs;
+    $config = loadConfig();
+    return $config['firebaseConfigs'];
 }
 
-
-function getActions() {
-     $config = loadConfig();
-     $actions = $config->actions;
-     return $actions;
-}
-
-
-
+// Pre-validation for handling requests
 function preValidation() {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-         http_response_code(405); // Method Not Allowed
-         $res = new stdClass();
-         $res->error = "Only GET requests are allowed";
-         echo json_encode($res);
-         exit;
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(['error' => 'Only GET requests are allowed']);
+        exit;
     }
 }
 
-
+// Validate the request (can add additional validation here if needed)
 function validation() {
     return true;
 }
 
-
+// Main function to handle incoming requests
 function processRequest() {
-     preValidation(); // Pre-validation checks
-     
-     $res = new stdClass();
-
+    preValidation(); // Pre-validation checks
+    
     if (!validation()) {
         http_response_code(400); // Bad Request
-        $res->error = "Invalid Request";
-        echo json_encode($res);
+        echo json_encode(['error' => 'Invalid request']);
         return;
     }
 
@@ -71,28 +52,17 @@ function processRequest() {
     if ($action === 'getFirebaseConfigs') {
         $firebaseConfigs = getFirebaseConfigs();
         http_response_code(200); // OK
-        $res->status = "success";
-        $res->firebaseConfigs = $firebaseConfigs;
-        echo json_encode($res);
-    }
-
-    elseif ($action === 'getActions') {
-        $actions = getActions();
-        http_response_code(200); // OK
-        $res->status = "success";
-        $res->actions = $actions;
-        echo json_encode($res);
+        echo json_encode([
+            'status' => 'success',
+            'firebaseConfigs' => $firebaseConfigs
+        ]);
     } else {
         http_response_code(400); // Bad Request
-        $res->error = "Invalid Request";
-        echo json_encode($res);
+        echo json_encode(['error' => 'Invalid action']);
     }
 }
 
-
-
+// Execute the request handling
 processRequest();
-
-
 
 ?>
