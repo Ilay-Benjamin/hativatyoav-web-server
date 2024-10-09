@@ -6,19 +6,13 @@ const app = express();
 const port = 9175; // Set your port here
 
 
-// HEYYY
-// Display the URLs to the client
-const displayUrls = (req, res) => {
-    const urls = `
-        <h1>Welcome to the Server</h1>
-        <ul>
-            <li><a href="/view">/view - Landing Page</a></li>
-            <li><a href="/admin">/admin - Admin Page</a></li>
-            <li><a href="/404">/404 - Custom 404 Error</a></li>
-        </ul>
-    `;
-    res.send(urls);
-};
+
+
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
+
+app.get('/', (req, res) => {
+     res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the index.html file
+});
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
 app.use('/view', createProxyMiddleware({
@@ -44,13 +38,15 @@ app.use('/admin', createProxyMiddleware({
     }
 }));
 
-// Serve a custom 404 page for all other routes
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'public/404.html'));
+
+app.get('/error', (req, res) => {
+     res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the index.html file
+})
+
+app.use((req, res) => {
+     res.status(404).redirect('/error');
 });
 
-// Root URL displays the correct client URLs
-app.get('/', displayUrls);
 
 // Start the server
 app.listen(port, () => {
