@@ -1,26 +1,32 @@
 const express = require('express');
 const { exec } = require('child_process');
 const app = express();
+const port = 3000; // Set your webhook server port here
 
+// Middleware to parse incoming JSON payloads
 app.use(express.json());
 
-
+// Webhook handler for GitHub Webhooks
 app.post('/webhook', (req, res) => {
   const payload = req.body;
   if (payload.ref === 'refs/heads/production') {
-    exec('cd develop/codes/my_business/customers/hativatyoav/landing && git pull origin production', (err, stdout, stderr) => {
+    console.log('Webhook received, running git pull...');
+    
+    // Execute git pull to update your files
+    exec('cd /develop/codes/my_business/customers/hativatyoav/landing && git pull origin production', (err, stdout, stderr) => {
       if (err) {
         console.error(`Error: ${stderr}`);
-        return res.sendStatus(500);
+        return res.status(500).send('Error during git pull');
       }
-      console.log(`Success: ${stdout}`);
-      return res.sendStatus(200);
+      console.log(`Git pull successful: ${stdout}`);
+      return res.status(200).send('Git pull successful');
     });
   } else {
-    return res.sendStatus(400);
+    return res.status(400).send('Not the production branch');
   }
 });
 
-app.listen(3000, () => {
-  console.log('Webhook server listening on port 3000');
+// Start the webhook server
+app.listen(port, () => {
+  console.log(`Webhook server running at http://localhost:${port}`);
 });
