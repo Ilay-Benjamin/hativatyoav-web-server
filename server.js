@@ -1,4 +1,13 @@
-GNU nano 7.2                                                                                                                                                                 server.js
+////////////
+////////////
+<<<<<<< HEAD
+=======
+////////////
+////////////
+////////////
+>>>>>>> @{-1}
+
+
 const express = require('express');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
