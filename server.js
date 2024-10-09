@@ -1,17 +1,22 @@
-GNU nano 7.2                                                                                                                                                                 server.js
+////////////
+////////////
+////////////
+////////////
+////////////
+
+
 const express = require('express');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 const port = 9175; // Set your port here
 
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
-
+// Serve the main index page
 app.get('/', (req, res) => {
-     res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the index.html file
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the index.html file
 });
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
@@ -38,51 +43,17 @@ app.use('/admin', createProxyMiddleware({
     }
 }));
 
-
+// Serve the 404 error page directly instead of redirecting
 app.get('/error', (req, res) => {
-     res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the index.html file
-})
-
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-////////////
-
-
-////////////
-
-app.use((req, res) => {
-     res.status(404).redirect('/error');
+    res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the 404.html file
 });
 
+// Handle all other routes with a 404 page
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html')); // Directly serve 404.html for undefined routes
+});
 
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-
-
-
-
-
-
-
