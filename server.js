@@ -7,7 +7,7 @@ const port = 9175; // Set your web server port here
 
 
 
- 
+ -------------
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -52,5 +52,5 @@ app.use((req, res) => {
 
 // Start the web server
 app.listen(port, () => {
-  console.log(`Web server running at http://webserver.hativatyoav-server.site:${port}`);
+  console.log(`Web server running at http://hativatyoav.site:${port}`);
 });
