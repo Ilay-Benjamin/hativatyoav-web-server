@@ -10,7 +10,6 @@ const port = 9175; // Set your web server port here
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
 // Serve the main index page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the index.html file
