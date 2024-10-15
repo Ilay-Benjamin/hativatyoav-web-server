@@ -6,23 +6,16 @@ const port = 9175; // Set your web server port here
  
 
 
-
- -------------
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the static files from the React app's build folder
-app.use(express.static('/public_html/landing/applications/admin/build'));
 
-// Handle all other routes by returning the React app's index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join('/public_html/landing/applications/admin/build', 'index.html'));
-});
 
 // Serve the main index page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the index.html file
 });
+
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
 app.use('/view', createProxyMiddleware({
@@ -33,6 +26,7 @@ app.use('/view', createProxyMiddleware({
   },
   secure: false // Ignore SSL certificate issues if any
 }));
+
 
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/admin', createProxyMiddleware({
@@ -48,17 +42,22 @@ app.use('/admin', createProxyMiddleware({
   }
 }));
 
+
 // Serve the 404 error page directly instead of redirecting
 app.get('/error', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the 404.html file
 });
+
 
 // Handle all other routes with a 404 page
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, 'public', '404.html')); // Directly serve 404.html for undefined routes
 });
 
+
 // Start the web server
 app.listen(port, () => {
   console.log(`Web server running at http://hativatyoav.site:${port}`);
 });
+
+
