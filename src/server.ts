@@ -20,8 +20,17 @@ const port = 9175; // Set your web server port here
 
 
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+///////////////
+///////////////
+
+
+
 // Route to fetch HTML from PHP server and return to client
-app.get('/get-html', async (req, res) => {
+app.get('/hey', async (req, res) => {
   try {
       // The URL of your PHP server that returns the HTML file
       const phpServerUrl = 'https://client.hativatyoav.site/index.php?project=landing&app=admin';
@@ -41,10 +50,6 @@ app.get('/get-html', async (req, res) => {
 ///////////////
 ///////////////
 
-
-
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Serve the main index page

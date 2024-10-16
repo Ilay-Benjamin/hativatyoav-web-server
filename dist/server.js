@@ -22,8 +22,11 @@ const app = (0, express_1.default)();
 const port = 9175; // Set your web server port here
 ///////////////
 ///////////////
+app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+///////////////
+///////////////
 // Route to fetch HTML from PHP server and return to client
-app.get('/get-html', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/hey', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // The URL of your PHP server that returns the HTML file
         const phpServerUrl = 'https://client.hativatyoav.site/index.php?project=landing&app=admin';
@@ -39,8 +42,6 @@ app.get('/get-html', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 }));
 ///////////////
 ///////////////
-// Serve static files from the public directory
-app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 // Serve the main index page
 app.get('/', (req, res) => {
     res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/welcome.html')); // Serve the index.html file
