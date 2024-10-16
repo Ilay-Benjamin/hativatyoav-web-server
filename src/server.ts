@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, '/../public')));
 
 // Serve the main index page
 app.get('/', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '/public', 'welcome.html')); // Serve the index.html file
+  res.sendFile(path.join(__dirname, '/../public', 'welcome.html')); // Serve the index.html file
 });
 
 
