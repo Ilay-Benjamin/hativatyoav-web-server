@@ -22,14 +22,6 @@ app.get('/home', (req, res) => {
     res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/index.html')); // Serve the index.html file
 });
 
-app.use('/landing', createProxyMiddleware({
-    target: 'https://hatmaryoav-site.web.app',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/landing': '/', // Rewrite the /view path to the root of the external site
-    },
-    secure: false // Ignore SSL certificate issues if any
-}));
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
 app.use('/landing/view', createProxyMiddleware({
     target: 'https://hatmaryoav-site.web.app',
@@ -51,6 +43,14 @@ app.use('/landing/admin', createProxyMiddleware({
         console.error('Proxy error:', err);
         res.status(500).send('There was an error with the proxy.');
     }
+}));
+app.use('/landing/', createProxyMiddleware({
+    target: 'https://hatmaryoav-site.web.app',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/landing': '/', // Rewrite the /view path to the root of the external site
+    },
+    secure: false // Ignore SSL certificate issues if any
 }));
 // Serve the 404 error page directly instead of redirecting
 app.get('/error', (req, res) => {
