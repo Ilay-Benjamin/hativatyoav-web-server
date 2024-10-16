@@ -15,18 +15,18 @@ const port = 9175; // Set your web server port here
 
 
 // Serve static files from the public directory
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Serve the main index page
 app.get('/', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '../public/', '/welcome.html')); // Serve the index.html file
+  res.sendFile(path.join(__dirname, 'public', 'welcome.html')); // Serve the index.html file
 });
 
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
 app.get('/home', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '/public', 'index.html')); // Serve the 404.html file
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the 404.html file
 });
 
 
