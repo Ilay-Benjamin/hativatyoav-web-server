@@ -49,7 +49,7 @@ app.get('/error', (req, res) => {
 });
 // Handle all other routes with a 404 page
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', '404.html')); // Directly serve 404.html for undefined routes
+    res.status(404).sendFile(path.join(path.join(__dirname, "../"), 'public', '404.html')); // Directly serve 404.html for undefined routes
 });
 // Start the web server
 app.listen(port, () => {
