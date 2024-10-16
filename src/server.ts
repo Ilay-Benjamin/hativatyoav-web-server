@@ -21,6 +21,7 @@ const port = 9175; // Set your web server port here
 
 
 app.use(express.static('/root/develop/codes/my_business/customers/hativatyoav/landing/public/'));
+app.use(express.static('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/'));
 
 
 
@@ -43,17 +44,7 @@ app.use((req: any, res: any, next: any) => {
 
 // מסלול למשיכת HTML משרת ה-PHP והחזרה ללקוח
 app.get('/hey', async (req, res) => {
-  try {
-    // כתובת URL של שרת ה-PHP להחזרת HTML
-    const phpServerUrl = 'https://client.hativatyoav.site/index.php?project=landing&app=admin';
-    // בקשה לשרת ה-PHP לקבלת הקובץ
-    const response = await axios.get(phpServerUrl);
-    // החזרת ה-HTML שהתקבל ללקוח
-    res.send(response.data);
-  } catch (error) {
-    console.error('Error fetching HTML from PHP server:', error);
-    res.status(500).send('Error fetching HTML from PHP server.');
-  }
+
 });
 
 
@@ -85,15 +76,9 @@ app.use('/view', createProxyMiddleware({
 
 
 // מסלול לפרוקסי ל-admin לאתר חיצוני
-app.use('/admin', createProxyMiddleware({
-  target: 'https://hativatyoav.site',
-  secure: false, // להתעלם מבעיות תעודת SSL אם ישנן
-  changeOrigin: true,
-  pathRewrite: {
-    '^/admin': '/landing/applications/admin/build/index.html', // להגיש את דף ה-admin
-  },
-}));
-
+app.use('/admin', (req: any, res: any) => {
+  res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/', 'index.html'));
+});
 
 
 // מסלול לדף שגיאה 404

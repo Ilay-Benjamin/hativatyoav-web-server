@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_proxy_middleware_1 = require("http-proxy-middleware");
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
-const axios_1 = __importDefault(require("axios"));
 ///////////////
 ///////////////
 const app = (0, express_1.default)();
@@ -23,6 +22,7 @@ const port = 9175; // Set your web server port here
 ///////////////
 ///////////////
 app.use(express_1.default.static('/root/develop/codes/my_business/customers/hativatyoav/landing/public/'));
+app.use(express_1.default.static('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/'));
 ///////////////
 ///////////////
 // טיפול בסוגי קבצים (CSS/JS)
@@ -37,18 +37,6 @@ app.use((req, res, next) => {
 });
 // מסלול למשיכת HTML משרת ה-PHP והחזרה ללקוח
 app.get('/hey', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // כתובת URL של שרת ה-PHP להחזרת HTML
-        const phpServerUrl = 'https://client.hativatyoav.site/index.php?project=landing&app=admin';
-        // בקשה לשרת ה-PHP לקבלת הקובץ
-        const response = yield axios_1.default.get(phpServerUrl);
-        // החזרת ה-HTML שהתקבל ללקוח
-        res.send(response.data);
-    }
-    catch (error) {
-        console.error('Error fetching HTML from PHP server:', error);
-        res.status(500).send('Error fetching HTML from PHP server.');
-    }
 }));
 // מסלול להצגת דף הבית הראשי
 app.get('/home', (req, res) => {
@@ -68,14 +56,9 @@ app.use('/view', (0, http_proxy_middleware_1.createProxyMiddleware)({
     secure: false // להתעלם מבעיות תעודת SSL אם ישנן
 }));
 // מסלול לפרוקסי ל-admin לאתר חיצוני
-app.use('/admin', (0, http_proxy_middleware_1.createProxyMiddleware)({
-    target: 'https://hativatyoav.site',
-    secure: false, // להתעלם מבעיות תעודת SSL אם ישנן
-    changeOrigin: true,
-    pathRewrite: {
-        '^/admin': '/landing/applications/admin/build/index.html', // להגיש את דף ה-admin
-    },
-}));
+app.use('/admin', (req, res) => {
+    res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/', 'index.html'));
+});
 // מסלול לדף שגיאה 404
 app.get('/error', (req, res) => {
     res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/public/', '404.html')); // להציג את 404.html
