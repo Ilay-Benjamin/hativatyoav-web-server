@@ -25,6 +25,17 @@ const port = 9175; // Set your web server port here
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 ///////////////
 ///////////////
+app.use((req, res, next) => {
+    if (req.url.endWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+    }
+    if (req.url.endWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript');
+    }
+    next();
+});
+///////////////
+///////////////
 // Route to fetch HTML from PHP server and return to client
 app.get('/hey', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

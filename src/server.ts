@@ -29,6 +29,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+app.use((req: any, res: any, next: any) => {
+  if ( req.url.endWith('.css') ) {
+    res.setHeader('Content-Type', 'text/css');
+  }
+  if ( req.url.endWith('.js') ) {
+    res.setHeader('Content-Type', 'application/javascript');
+  }
+  next();
+});
+
+
+
+///////////////
+///////////////
+
+
+
 // Route to fetch HTML from PHP server and return to client
 app.get('/hey', async (req, res) => {
   try {
