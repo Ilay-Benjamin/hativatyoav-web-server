@@ -1,15 +1,14 @@
-const express = require('express');
-const { exec } = require('child_process');
+import express from 'express';
+import { exec } from 'child_process';
+
 const app = express();
 const port = 3000; // Set your webhook server port here
-
-
 
 
 app.use(express.json());
 
 // Webhook handler for GitHub Webhooks
-app.post('/webhook', (req, res) => {
+app.post('/webhook', (req: any, res: any) => {
   const payload = req.body;
   if (payload.ref === 'refs/heads/production') {
     console.log('Webhook received, running git pull...');
