@@ -21,18 +21,27 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
     res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/index.html')); // Serve the index.html file
 });
-// Proxy requests to /view to the external site (hatmaryoav-site.web.app)
-app.use('/ladning/view', createProxyMiddleware({
+
+app.use('/landing', createProxyMiddleware({
     target: 'https://hatmaryoav-site.web.app',
     changeOrigin: true,
     pathRewrite: {
-        '^/ladning/view': '/', // Rewrite the /view path to the root of the external site
+        '^/landing': '/', // Rewrite the /view path to the root of the external site
+    },
+    secure: false // Ignore SSL certificate issues if any
+}));
+// Proxy requests to /view to the external site (hatmaryoav-site.web.app)
+app.use('/landing/view', createProxyMiddleware({
+    target: 'https://hatmaryoav-site.web.app',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/landing': '/', // Rewrite the /view path to the root of the external site
     },
     secure: false // Ignore SSL certificate issues if any
 }));
 // Proxy requests to /admin to the external site (hativatyoav.site)
-app.use('/ladning/admin', createProxyMiddleware({
-    target: 'https://hativatyoav.site',
+app.use('/landing/admin', createProxyMiddleware({
+    target: 'https://client.hativatyoav.site',
     changeOrigin: true,
     pathRewrite: {
         '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
