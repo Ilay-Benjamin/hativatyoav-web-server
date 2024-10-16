@@ -30,10 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req: any, res: any, next: any) => {
-  if ( req.url.endWith('.css') ) {
+  if ( req.url.endsWith('.css') ) {
     res.setHeader('Content-Type', 'text/css');
   }
-  if ( req.url.endWith('.js') ) {
+  if ( req.url.endsWith('.js') ) {
     res.setHeader('Content-Type', 'application/javascript');
   }
   next();
