@@ -34,11 +34,24 @@ app.get('/home', (req, res) => {
 });
 
 
+// Proxy requests to /admin to the external site (hativatyoav.site)
+app.use('/view', createProxyMiddleware({
+    target: 'https://client.hativatyoav.site/index.php?project=landing&app=view',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/view': '/', // Serve the admin page
+    },
+    secure: false, // Ignore SSL certificate issues if any
+    onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.status(500).send('There was an error with the proxy.');
+    }
+}));
 
 
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/admin', createProxyMiddleware({
-    target: 'https://client.hativatyoav.site/landing/applications/admin/build/index.html',
+    target: 'https://client.hativatyoav.site/index.php?project=landing&app=admin',
     changeOrigin: true,
     pathRewrite: {
         '^/admin': '/', // Serve the admin page
