@@ -29,19 +29,15 @@ app.get('/home', (req, res) => {
 });
 
 
-// Proxy requests to /admin to the external site (hativatyoav.site)
-app.use('/admin/', createProxyMiddleware({
+app.use('/admin', createProxyMiddleware({
     target: 'https://client.hativatyoav.site',
     changeOrigin: true,
     pathRewrite: {
-        '^/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+        '^/admin': '/landing/applications/admin/build/index.html', // Rewrite the /view path to the root of the external site
     },
-    secure: false, // Ignore SSL certificate issues if any
-    onError: (err, req, res) => {
-        console.error('Proxy error:', err);
-        res.status(500).send('There was an error with the proxy.');
-    }
+    secure: false // Ignore SSL certificate issues if any
 }));
+
 
 
 app.use('/view', createProxyMiddleware({
