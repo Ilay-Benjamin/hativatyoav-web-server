@@ -47,10 +47,10 @@ app.use('/ladning/view', createProxyMiddleware({
 
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/admin', createProxyMiddleware({
-    target: 'https://hativatyoav.site',
+    target: 'https://client:hativatyoav.site:9175',
     changeOrigin: true,
     pathRewrite: {
-        '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+        '^/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
     },
     secure: false, // Ignore SSL certificate issues if any
     onError: (err, req, res) => {
