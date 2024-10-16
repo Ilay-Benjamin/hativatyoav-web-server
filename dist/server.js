@@ -34,23 +34,14 @@ app.get('/home', (req, res) => {
 });
 
 
-// Proxy requests to /view to the external site (hatmaryoav-site.web.app)
-app.use('/ladning/view', createProxyMiddleware({
-    target: 'https://hatmaryoav-site.web.app',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/view': '/', // Rewrite the /view path to the root of the external site
-    },
-    secure: false // Ignore SSL certificate issues if any
-}));
 
 
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/admin', createProxyMiddleware({
-    target: 'https://client:hativatyoav.site:9175',
+    target: 'https://client.hativatyoav.site/landing/applications/admin/build/index.html',
     changeOrigin: true,
     pathRewrite: {
-        '^/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+        '^/admin': '/', // Serve the admin page
     },
     secure: false, // Ignore SSL certificate issues if any
     onError: (err, req, res) => {
