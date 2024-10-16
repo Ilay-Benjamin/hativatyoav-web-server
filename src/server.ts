@@ -1,13 +1,42 @@
-const express = require('express');
-const path = require('path');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import express from 'express';
+import path from 'path';
+import axios from 'axios';
+
+
+
+///////////////
+///////////////
+
+
+
 const app = express();
 const port = 9175; // Set your web server port here
+
+
+
 ///////////////
 ///////////////
-///////////////
-///////////////
-///////////////
+
+
+
+// Route to fetch HTML from PHP server and return to client
+app.get('/get-html', async (req, res) => {
+  try {
+      // The URL of your PHP server that returns the HTML file
+      const phpServerUrl = 'https://client.hativatyoav.site/index.php?project=landing&app=admin';
+      // Make the request to the PHP server
+      const response = await axios.get(phpServerUrl);
+
+      // Send the HTML response received from the PHP server to the client
+      res.send(response.data);
+  } catch (error) {
+      console.error('Error fetching HTML from PHP server:', error);
+      res.status(500).send('Error fetching HTML from PHP server.');
+  }
+});
+
+
 
 ///////////////
 ///////////////
@@ -44,15 +73,11 @@ app.use('/ladning/view', createProxyMiddleware({
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/ladning/admin', createProxyMiddleware({
   target: 'https://hativatyoav.site',
+  secure: false, // Ignore SSL certificate issues if any
   changeOrigin: true,
   pathRewrite: {
     '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
   },
-  secure: false, // Ignore SSL certificate issues if any
-  onError: (err: any, req: any, res: any) => {
-    console.error('Proxy error:', err);
-    res.status(500).send('There was an error with the proxy.');
-  }
 }));
 
 
@@ -62,11 +87,11 @@ app.get('/error', (req: any, res: any) => {
 });
 
 
-
 // Start the web server
 app.listen(port, () => {
   console.log(`Web server running at http://hativatyoav.site:${port}`);
 });
+
 
 // 5
 
