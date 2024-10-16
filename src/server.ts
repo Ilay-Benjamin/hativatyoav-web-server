@@ -20,33 +20,33 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 // Serve the main index page
 app.get('/', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '/public', 'index.html')); // Serve the index.html file
+  res.sendFile(path.join(__dirname, '/public', 'welcome.html')); // Serve the index.html file
 });
 
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
 app.get('/home', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '../public', 'welcome.html')); // Serve the 404.html file
+  res.sendFile(path.join(__dirname, '/public', 'index.html')); // Serve the 404.html file
 });
 
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
-app.use('/view', createProxyMiddleware({
+app.use('/ladning/view', createProxyMiddleware({
   target: 'https://hatmaryoav-site.web.app',
   changeOrigin: true,
   pathRewrite: {
-    '^/view': '/', // Rewrite the /view path to the root of the external site
+    '^/ladning/view': '/', // Rewrite the /view path to the root of the external site
   },
   secure: false // Ignore SSL certificate issues if any
 }));
 
 
 // Proxy requests to /admin to the external site (hativatyoav.site)
-app.use('/admin', createProxyMiddleware({
+app.use('/ladning/admin', createProxyMiddleware({
   target: 'https://hativatyoav.site',
   changeOrigin: true,
   pathRewrite: {
-    '^/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+    '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
   },
   secure: false, // Ignore SSL certificate issues if any
   onError: (err: any, req: any, res: any) => {
@@ -58,14 +58,9 @@ app.use('/admin', createProxyMiddleware({
 
 // Serve the 404 error page directly instead of redirecting
 app.get('/error', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '/../','public', '404.html')); // Serve the 404.html file
+  res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the 404.html file
 });
 
-
-// Handle all other routes with a 404 page
-app.use((req: any, res: any) => {
-  res.status(404).sendFile(path.join(__dirname, 'public', '404.html')); // Directly serve 404.html for undefined routes
-});
 
 
 // Start the web server
