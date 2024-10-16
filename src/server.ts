@@ -53,13 +53,13 @@ app.get('/hey', async (req, res) => {
 
 
 // Serve the main index page
-app.get('/', (req: any, res: any) => {
-  res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/welcome.html')); // Serve the index.html file
+app.get('/home', (req: any, res: any) => {
+  res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/public/', '/welcome.html')); // Serve the index.html file
 });
 
 
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
-app.get('/home', (req: any, res: any) => {
+app.get('/', (req: any, res: any) => {
   res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/index.html')); // Serve the index.html file
 });
 

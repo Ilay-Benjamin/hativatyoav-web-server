@@ -43,11 +43,11 @@ app.get('/hey', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 ///////////////
 ///////////////
 // Serve the main index page
-app.get('/', (req, res) => {
-    res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/welcome.html')); // Serve the index.html file
+app.get('/home', (req, res) => {
+    res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/public/', '/welcome.html')); // Serve the index.html file
 });
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/index.html')); // Serve the index.html file
 });
 // Proxy requests to /view to the external site (hatmaryoav-site.web.app)
