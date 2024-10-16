@@ -58,7 +58,7 @@ app.use('/admin', createProxyMiddleware({
 
 // Serve the 404 error page directly instead of redirecting
 app.get('/error', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, 'public', '404.html')); // Serve the 404.html file
+  res.sendFile(path.join(__dirname, '/../','public', '404.html')); // Serve the 404.html file
 });
 
 
