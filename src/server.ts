@@ -76,7 +76,7 @@ app.use('/view', createProxyMiddleware({
 
 
 // מסלול לפרוקסי ל-admin לאתר חיצוני
-app.use('/admin', (req: any, res: any) => {
+app.use('/xxx', (req: any, res: any) => {
   res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/', 'index.html'));
 });
 

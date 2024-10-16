@@ -56,7 +56,7 @@ app.use('/view', (0, http_proxy_middleware_1.createProxyMiddleware)({
     secure: false // להתעלם מבעיות תעודת SSL אם ישנן
 }));
 // מסלול לפרוקסי ל-admin לאתר חיצוני
-app.use('/admin', (req, res) => {
+app.use('/xxx', (req, res) => {
     res.sendFile(path_1.default.join('/root/develop/codes/my_business/customers/hativatyoav/landing/src/client/build/', 'index.html'));
 });
 // מסלול לדף שגיאה 404
