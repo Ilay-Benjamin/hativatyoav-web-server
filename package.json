@@ -2,7 +2,6 @@
   "name": "hativatyoav-web-server",
   "version": "1.0.0",
   "main": "/src/server.js",
-  "homepage": "./",
   "scripts": {
     "start-main-js": "node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
