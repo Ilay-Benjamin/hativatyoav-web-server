@@ -2,8 +2,12 @@
 const express = require('express');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+
+
 const app = express();
 const port = 9175; // Set your web server port here
+
+
 ///////////////
 ///////////////
 ///////////////
@@ -11,6 +15,7 @@ const port = 9175; // Set your web server port here
 ///////////////
 ///////////////
 ///////////////
+
 
 
 // Serve static files from the public directory
@@ -19,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the main index page
 app.get('/', (req, res) => {
-    res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/welcome.html')); // Serve the index.html file
+    res.sendFile(path.join('/root/develop/codes/my_business/customers/hativatyoav/landing/', '/public', '/home.html')); // Serve the index.html file
 });
 
 
@@ -29,24 +34,29 @@ app.get('/home', (req, res) => {
 });
 
 
-app.use('/admin', createProxyMiddleware({
-    target: 'https://client.hativatyoav.site',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/admin': '/landing/applications/admin/build/index.html', // Rewrite the /view path to the root of the external site
-    },
-    secure: false // Ignore SSL certificate issues if any
-}));
-
-
-
-app.use('/view', createProxyMiddleware({
+// Proxy requests to /view to the external site (hatmaryoav-site.web.app)
+app.use('/ladning/view', createProxyMiddleware({
     target: 'https://hatmaryoav-site.web.app',
     changeOrigin: true,
     pathRewrite: {
         '^/view': '/', // Rewrite the /view path to the root of the external site
     },
     secure: false // Ignore SSL certificate issues if any
+}));
+
+
+// Proxy requests to /admin to the external site (hativatyoav.site)
+app.use('/admin', createProxyMiddleware({
+    target: 'https://hativatyoav.site',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+    },
+    secure: false, // Ignore SSL certificate issues if any
+    onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.status(500).send('There was an error with the proxy.');
+    }
 }));
 
 
