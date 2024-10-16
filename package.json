@@ -1,7 +1,6 @@
 {
   "name": "hativatyoav-web-server",
   "version": "1.0.0",
-  "main": "/dist/server.js",
   "homepage": "./",
   "scripts": {
     "start-main-js": "node ./dist/server.js",
