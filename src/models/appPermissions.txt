@@ -1,0 +1,312 @@
+const application = require('./application');
+const project = require('./project');
+
+
+
+class AccessDataModel {
+     static TYPE = 'Abstract';
+     constructor(id, name, description = "") {
+          this.id = id;
+          this.name = name;
+          this.description = description;
+     }
+     static create(id, name, description = "") {
+          return new AccessDataModel(id, name, description);
+     }
+     get type() {
+          return AccessDataModel.TYPE;
+     }
+     isSameTypeAs(model) {
+          return this.type === model.type;
+     }
+     isEqualTo(model) {
+          return model && this.isSameTypeAs(model) &&
+               Object.keys(model).length === Object.keys(this).length &&
+               Object.entries(model).every(([key, value]) => this[key] === value);
+      }
+}
+
+
+class AccessRule extends AccessDataModel {
+     
+
+
+class AccessRestriction extends AccessDataModel {
+     constructor(id, name, description = "") {
+          super(id, name, description);
+     }
+     static create(id, name, description = "") {
+          return new AccessRestriction(id, name, description);
+     }
+}
+
+
+class AuthenticationMethod extends AccessDataModel {
+     constructor(id, name, description = "") {
+          super(id, name, description);
+     }
+     static create(id, name, description = "") {
+          return new AuthenticationMethod(id, name, description);
+     }
+}
+
+
+class AccessControl extends AccessDataModel {
+     constructor(id, name, description = "") {
+          super(id, name, description);
+     }
+     static create(id, name, description = "") {
+          return new AccessControl(id, name, description);
+     }
+}
+
+
+class AccessPermission extends AccessDataModel {
+     constructor(id, name, description = "") {
+          super(id, name, description);
+     }
+     static create(id, name, description = "") {
+          return new AccessPermission(id, name, description);
+     }
+}
+
+
+
+
+class Access {
+
+     
+     static Restriction = class {
+          static NONE = 0;
+          static ACCESS_DENIED = 1
+          static READ_ONLY = 3;
+          static READ_WRITE = 4;
+          static ACTION_DENIED = 5
+          static ALL = 6;
+          static #values = {
+               [Access.Restriction.NONE]:
+                    new AccessRestriction(Access.Restriction.NONE, "None", "No restrictions"),
+               [Access.Restriction.ACCESS_DENIED]:
+                    new AccessRestriction(Access.Restriction.ACCESS_DENIED, "Access Denied", "Access denied"),
+               [Access.Restriction.READ_ONLY]:
+                    new AccessRestriction(Access.Restriction.READ_ONLY, "Read Only", "Read only access"),
+               [Access.Restriction.READ_WRITE]:
+                    new AccessRestriction(Access.Restriction.READ_WRITE, "Read Write", "Read and write access"),
+               [Access.Restriction.ACTION_DENIED]:
+                    new AccessRestriction(Access.Restriction.ACTION_DENIED, "Action Denied", "Action denied"),
+               [Access.Restriction.ALL]:
+                    new AccessRestriction(Access.Restriction.ALL, "All", "All access")
+          }
+          static get(id) {
+               try {
+                    if (!Access.Restriction.isValue(id)) {
+                         throw new Error(`Access.Restriction does not have an id of ${id}`);
+                    }
+                    return Access.Restriction.#values[id];
+               } catch (e) {
+                    console.error(e);
+               }
+          }
+          static isValue(id) {
+               return Access.Restriction.#values.hasOwnProperty(id);
+          }
+     }
+
+     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     static Authorization = class {
+          
+          // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          static Contol = class {
+
+               // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+               static Types = class {
+                    static NONE = 0;
+                    static ROLE_BASED = 1;
+                    static TOKEN_BASED = 2;
+                    static #values = {
+                         [Access.Authorization.Types.NONE]:
+                              new AccessControl(
+                                   Access.Authorization.Types.NONE, "None", "No authorization required"),
+                         [Access.Authorization.Types.ROLE_BASED]:
+                              new AccessControl(
+                                   Access.Authorization.Types.ROLE_BASED, "Role Based", "Role based authorization required"),
+                         [Access.Authorization.Types.TOKEN_BASED]:
+                              new AccessControl(
+                                   Access.Authorization.Types.TOKEN_BASED, "Token Based", "Token based authorization required")
+                    }
+                    static get(id) {
+                         try {
+                              if (!Access.Authorization.Types.isValue(id)) {
+                                   throw new Error(`Access.Authorization.Types does not have an id of ${id}`);
+                              }
+                              return Access.Authorization.Types.#values[id];
+                         } catch (e) {
+                              console.error(e);
+                         }
+                    }
+                    static isValue(id) {
+                         return Access.Authorization.Types.#values.hasOwnProperty(id);
+                    }
+               }
+
+               // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+               static RoleBased = class extends AccessControl {
+                    constructor(id, name, description = "") {
+                         super(id, name, description);
+                    }
+                    static NONE = 0;
+                    static USER = 1;
+                    static ADMIN = 2;
+                    static #values = {
+                         [Access.Authorization.RoleBased.NONE]:
+                              new AccessPermission(
+                                   Access.Authorization.RoleBased.NONE, "None", "No authorization required"),
+                         [Access.Authorization.RoleBased.USER]:
+                              new AccessPermission(
+                                   Access.Authorization.RoleBased.USER, "User", "User authorization required"),
+                         [Access.Authorization.RoleBased.ADMIN]:
+                              new AccessPermission(
+                                   Access.Authorization.RoleBased.ADMIN, "Admin", "Admin authorization required")
+                    }
+                    static get(id) {
+                         try {
+                              if (!Access.Authorization.RoleBased.isValue(id)) {
+                                   throw new Error(`Access.Authorization.RoleBased does not have an id of ${id}`);
+                              }
+                              return Access.Authorization.RoleBased.#values[id];
+                         } catch (e) {
+                              console.error(e);
+                         }
+                    }
+                    static isValue(id) {
+                         return Access.Authorization.RoleBased.#values.hasOwnProperty(id);
+                    }
+               }
+     
+               // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+               static TokenBased = class extends AccessControl {
+
+                    static Permissions = class {
+                         static NONE = 0;
+                         static VALID = 1;
+                         static INVALID = 2;
+                         static #values = {
+                         [Access.Authorization.TokenBased.NONE]:
+                              new AccessPermission(
+                                   Access.Authorization.TokenBased.NONE, "NONE", "No token required"),
+                         [Access.Authorization.TokenBased.VALID]:
+                              new AccessPermission(
+                                   Access.Authorization.TokenBased.VALID, "VALID", "Valid token"),
+                         [Access.Authorization.TokenBased.INVALID]:
+                              new AccessPermission(
+                                   Access.Authorization.TokenBased.INVALID, "INVALID", "Invalid token")
+                    }
+                    static get(id) {
+                         try {
+                              if (!Access.Authorization.TokenBased.isValue(id)) {
+                                   throw new Error(`Access.Authorization.TokenBased does not have an id of ${id}`);
+                              }
+                              return Access.Authorization.TokenBased.#values[id];
+                         } catch (e) {
+                              console.error(e);
+                         }
+                    }
+                    static isValue(id) {
+                         return Access.Authorization.TokenBased.#values.hasOwnProperty(id);
+                    }
+               }
+          
+
+
+          }
+
+
+     }
+
+
+     static Authentication = class {
+          static NONE = 0;
+          static SIGN_IN = 1;
+          static API_KEY = 2;
+          static #values = {
+               [Access.Authentication.NONE]:
+                    new Access.Authentication(Access.Authentication.NONE, "None", "No authentication required"),
+               [Access.Authentication.SIGN_IN]:
+                    new Access.Authentication(Access.Authentication.SIGN_IN, "Sign In", "Sign in to the application"),
+               [Access.Authentication.API_KEY]:
+                    new Access.Authentication(Access.Authentication.API_KEY, "API Key", "Use API key to access the application")
+          }
+          static get(id) {
+               try {
+                    if (!Access.Authentication.isValue(id)) {
+                         throw new Error(`Access.Authentication does not have an id of ${id}`);
+                    }
+                    return Access.Authentication.#values[id];
+               } catch (e) {
+                    console.error(e);
+               }
+          }
+          static isValue(id) {
+               return Access.Authentication.#values.hasOwnProperty(id);
+          }
+
+     }
+
+}
+
+
+
+
+
+
+
+class AccessManager {
+     constructor() {
+          this.#access = [];
+          this.#app = null;
+          this.#project = null;
+     }
+     addAccess(access) {
+          if (access && access instanceof AccessDataModel && !this.#access.includes(access)) {
+               this.#access.push(access);
+          }
+     }
+     removeAccess(access) {
+          if (access && access instanceof AccessDataModel && this.#access.includes(access)) {
+               this.#access.pop(access);
+          }
+     }
+     getAccess() {
+          return this.#access;
+     }
+     getAccessById(id) {
+          return this.#access.find(access => access.id === id);
+     }
+     getAccessByName(name) {
+          return this.#access.find(access => access.name === name);
+     }
+     getAccessByDescription(description) {
+          return this.#access.find(access => access.description === description);
+     }
+     hasAccess(access) {
+          return access && access instanceof AccessDataModel && this.#access.includes(access);
+     }
+     hasAccessById(id) {
+          return this.#access.find(access => access.id === id);
+     }
+     hasAccessByName(name) {
+          return this.#access.find(access => access.name === name);
+     }
+     hasAccessByDescription(description) {
+          return this.#access.find(access => access.description === description);
+     }
+     clearAccess() {
+          this.#access = [];
+     }
+}
+
+
+
+
+
+

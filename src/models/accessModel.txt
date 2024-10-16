@@ -1,0 +1,16 @@
+
+enu
+
+
+
+class Access {
+     @Attr id;
+     @Attr  method
+     constructor() {
+     }
+}
+
+
+
+
+class 
