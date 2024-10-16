@@ -29,38 +29,28 @@ app.get('/home', (req, res) => {
 });
 
 
-app.use('/view', createProxyMiddleware({
-    target: 'https://hatmaryoav-site.web.app',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/landing/view': '/', // Rewrite the /view path to the root of the external site
-    },
-    secure: false // Ignore SSL certificate issues if any
-}));
-
-
-app.use('/landing', createProxyMiddleware({
-    target: 'https://hatmaryoav-site.web.app',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/landing/view': '/', // Rewrite the /view path to the root of the external site
-    },
-    secure: false // Ignore SSL certificate issues if any
-}));
-
-
 // Proxy requests to /admin to the external site (hativatyoav.site)
 app.use('/admin/', createProxyMiddleware({
     target: 'https://client.hativatyoav.site',
     changeOrigin: true,
     pathRewrite: {
-        '^/landing/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
+        '^/admin': '/landing/applications/admin/build/index.html', // Serve the admin page
     },
     secure: false, // Ignore SSL certificate issues if any
     onError: (err, req, res) => {
         console.error('Proxy error:', err);
         res.status(500).send('There was an error with the proxy.');
     }
+}));
+
+
+app.use('/view', createProxyMiddleware({
+    target: 'https://hatmaryoav-site.web.app',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/view': '/', // Rewrite the /view path to the root of the external site
+    },
+    secure: false // Ignore SSL certificate issues if any
 }));
 
 
