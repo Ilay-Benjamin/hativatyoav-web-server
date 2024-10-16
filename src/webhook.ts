@@ -14,7 +14,7 @@ app.post('/webhook', (req: any, res: any) => {
     console.log('Webhook received, running git pull...');
 
     // Execute git pull to update your files
-    exec('cd develop/codes/my_business/customers/hativatyoav/landing && git pull origin production', (err, stdout, stderr) => {
+    exec('echo "Heyyyyyyyyyyyyyyyyyyyyyyyyyy" && cd develop/codes/my_business/customers/hativatyoav/landing && git pull origin production', (err, stdout, stderr) => {
       if (err) {
         console.error(`Error: ${stderr}`);
         return res.status(500).send('Error during git pull');
